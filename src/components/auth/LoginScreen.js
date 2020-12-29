@@ -1,12 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useForm } from '../../hooks/useForm';
-import { useDispatch } from 'react-redux';
-import { login } from '../../actions/auth';
+import { useDispatch, useSelector } from 'react-redux';
+import { startGoogleLogin, startLoginEmailPassword } from '../../actions/auth';
+import validator from 'validator';
+import { removeError, setError } from '../../actions/ui';
 
 export const LoginScreen = () => {
 
     const dispatch = useDispatch();
+    const { msgError, loading } = useSelector(state => state.ui);
 
     const [formValues, handleInputChange] = useForm({
         email: '',
@@ -17,12 +20,42 @@ export const LoginScreen = () => {
 
     const handleLogin = (e) => {
         e.preventDefault();
-        dispatch(login(123, 'Elena'));
+
+        if (!isFormValid()) {
+            return;
+        }
+
+        dispatch(startLoginEmailPassword(email, password));
+    }
+
+    const handleGoogleLogin = () => {
+        dispatch(startGoogleLogin());
+    }
+
+    const isFormValid = () => {
+        if (!validator.isEmail(email)) {
+            dispatch(setError('Email not valid'));
+            return false;
+        } else if (password.length < 5) {
+            dispatch(setError('Password not valid'));
+            return false;
+        }
+
+        dispatch(removeError());
+
+        return true;
     }
 
     return (
         <>
             <h3 className="auth__title mb-2">Login</h3>
+
+            {
+                msgError &&
+                <div className="auth__alert-error">
+                    {msgError}
+                </div>
+            }
 
             <form onSubmit={handleLogin}>
                 <input
@@ -46,6 +79,7 @@ export const LoginScreen = () => {
 
                 <button
                     className="btn btn-primary btn-block"
+                    disabled={loading}
                     type="submit">
                     Login
                 </button>
@@ -54,6 +88,7 @@ export const LoginScreen = () => {
                     <p>Login social network</p>
                     <div
                         className="google-btn"
+                        onClick={handleGoogleLogin}
                     >
                         <div className="google-icon-wrapper">
                             <img className="google-icon" src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="google button" />
