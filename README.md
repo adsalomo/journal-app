@@ -13,3 +13,4 @@ In the project directory, you can run:
 
 * npm install node-sass@4.14.1
 
+* enzyme-to-json
