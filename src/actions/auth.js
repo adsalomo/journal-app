@@ -1,7 +1,9 @@
 import { types } from '../types/types';
 import { firebase, googleAuthProvide } from '../firebase/firebase-config';
 import { uiFinishLoading, uiStartLoading } from './ui';
+import Swal from 'sweetalert2'
 
+// middleware
 export const startLoginEmailPassword = (email, password) => {
     return (dispatch) => {
 
@@ -15,11 +17,13 @@ export const startLoginEmailPassword = (email, password) => {
             }, e => {
                 dispatch(uiFinishLoading());
                 console.log(e);
+                Swal.fire('Error', e.message, 'error');
             });
 
     }
-}
+};
 
+// middleware
 export const startRegister = (name, email, password) => {
     return (dispatch) => {
 
@@ -29,11 +33,13 @@ export const startRegister = (name, email, password) => {
                 dispatch(login(user.uid, user.displayName));
             }, e => {
                 console.log(e);
+                Swal.fire('Error', e.message, 'error');
             });
 
     }
-}
+};
 
+// middleware
 export const startGoogleLogin = () => {
     return (dispatch) => {
 
@@ -45,7 +51,7 @@ export const startGoogleLogin = () => {
             });
 
     }
-}
+};
 
 export const login = (uid, displayName) => {
     return {
@@ -55,4 +61,19 @@ export const login = (uid, displayName) => {
             displayName,
         }
     }
+};
+
+// middleware
+export const startLogout = () => {
+    return async (dispatch) => {
+        await firebase.auth().signOut();
+        dispatch(logout());
+    }
 }
+
+export const logout = () => {
+    return {
+        type: types.logout,
+    }
+}
+

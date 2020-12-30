@@ -5,6 +5,8 @@ import { AuthRouter } from './AuthRouter';
 import { firebase } from '../../firebase/firebase-config';
 import { useDispatch } from 'react-redux';
 import { login } from '../../actions/auth';
+import { PublicRoute } from './PublicRoute';
+import { PrivateRoute } from './PrivateRoute';
 
 export const AppRouter = () => {
 
@@ -39,8 +41,25 @@ export const AppRouter = () => {
 
             <div>
                 <Switch>
-                    <Route path="/auth" component={AuthRouter} />
-                    <Route exact path="/" component={JournalScreen} />
+                    <PublicRoute
+                        isAuth={isLoggedIn}
+                        path="/auth"
+                        component={AuthRouter}
+                    />
+
+                    <PrivateRoute
+                        isAuth={isLoggedIn}
+                        exact
+                        path="/"
+                        component={JournalScreen}
+                    />
+
+                    {
+                        /*
+                        <Route path="/auth" component={AuthRouter} />
+                        <Route exact path="/" component={JournalScreen} />
+                        */
+                    }
 
                     <Redirect to="/auth/login" />
                 </Switch>
