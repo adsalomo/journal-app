@@ -56,7 +56,10 @@ export const RegisterScreen = () => {
                 </div>
             }
 
-            <form onSubmit={handleRegister}>
+            <form
+                onSubmit={handleRegister}
+                className="animate__animated animate__fadeIn animate__faster"
+            >
                 <input
                     type="text"
                     placeholder="Name"
