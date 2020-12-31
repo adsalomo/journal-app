@@ -11,6 +11,14 @@ const firebaseConfig = {
     appId: "1:195222583000:web:61cd084605545055b409ad"
 };
 
+//console.log(process.env);
+
+if (process.env.NODE_ENV === 'test') {
+    //console.log('Estoy en test');
+} else {
+    //console.log('Estoy en dev');
+}
+
 firebase.initializeApp(firebaseConfig);
 
 const db = firebase.firestore();
